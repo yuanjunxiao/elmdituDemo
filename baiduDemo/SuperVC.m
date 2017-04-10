@@ -9,6 +9,7 @@
 #import "SuperVC.h"
 #import "myTableViewCell.h"
 #import <BaiduMapAPI_Search/BMKSearchComponent.h>//引入检索功能所有的头文件
+#define XK_NC [NSNotificationCenter defaultCenter]
 
 #define kScreenSize [UIScreen mainScreen].bounds.size
 @interface SuperVC ()<UITableViewDataSource,UITableViewDelegate>
@@ -16,7 +17,9 @@
 @end
 
 @implementation SuperVC
-
+- (void)dealloc{
+    [XK_NC removeObserver:self];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self creatTableview];

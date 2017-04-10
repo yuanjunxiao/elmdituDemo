@@ -28,10 +28,13 @@
 @end
 
 @implementation ViewController
-
+- (void)dealloc{
+    [XK_NC removeObserver:self];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"地图";
+    
     self.view.backgroundColor =[UIColor whiteColor];
     _sourceArr =[[NSMutableArray alloc]init];
     [XK_NC addObserver:self selector:@selector(backaction:) name:@"backSource" object:nil];
