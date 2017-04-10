@@ -131,7 +131,7 @@
     [searchBar.layer setBorderWidth:8];
     [searchBar.layer setBorderColor:[UIColor whiteColor].CGColor];  //设置边框为白色
     
-    searchBar.placeholder = @"|写字楼/小区/学校";
+    searchBar.placeholder = @"写字楼/小区/学校";
     [titleView addSubview:searchBar];
     
     //Set to titleView
@@ -143,26 +143,29 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     if ([searchBar.text isEqualToString:@""]) {
-         NSLog(@"333333333333333333333333333333");
         [_backView removeFromSuperview];
+        _backView = nil;
         [searchBar resignFirstResponder];
-
     }
+    [self loaddataWithStr:searchBar.text];
+
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
-    NSLog(@"111111111111111111111111111111111111");
+//    [self loaddataWithStr:searchBar.text];
 }
 #pragma mark 点击search实现搜索结果
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    NSLog(@"22222222222222222222222222222222222222");
+    [self loaddataWithStr:searchBar.text];
+}
+-(void)loaddataWithStr:(NSString *)str{
     BMKNearbySearchOption *citySearchOption = [[BMKNearbySearchOption alloc]init];
     citySearchOption.location = CLLocationCoordinate2D{_latilation,_longlation};
     citySearchOption.radius = 10000;
     citySearchOption.sortType = BMK_POI_SORT_BY_DISTANCE;
     citySearchOption.pageIndex = 0;
     citySearchOption.pageCapacity = 30;
-    citySearchOption.keyword = searchBar.text;
+    citySearchOption.keyword = str;
     BOOL flag = [_poisearch poiSearchNearBy:citySearchOption];
     if(flag)
     {
@@ -177,11 +180,13 @@
 
 }
 -(void)creatBackView{
-    _backView =[[UIView alloc]initWithFrame:CGRectMake(0, 64, kScreenSize.width, kScreenSize.height-64)];
-    _backView.backgroundColor=XK_COL_RGB(0xf2f2f2);
-    AppDelegate * appdelegte = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    [appdelegte.window addSubview:_backView];
-    [self creatTableview];
+    if (!_backView) {
+        _backView =[[UIView alloc]initWithFrame:CGRectMake(0, 64, kScreenSize.width, kScreenSize.height-64)];
+        _backView.backgroundColor=XK_COL_RGB(0xf2f2f2);
+        AppDelegate * appdelegte = (AppDelegate*)[UIApplication sharedApplication].delegate;
+        [appdelegte.window addSubview:_backView];
+        [self creatTableview];
+    }
 }
 //创建搜索列表
 -(void)creatTableview{
@@ -212,10 +217,10 @@
     return _sourceArr.count;
 }
 -(void)creatImgaeView{
-    UILabel *Label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 15)];
+    UILabel *Label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 50, 15)];
     Label.text = @"暂无数据";
     Label.textColor= XK_COL_RGB(0x111111);
-    Label.textAlignment = NSTextAlignmentLeft;
+    Label.textAlignment = NSTextAlignmentCenter;
     Label.center = _backView.center;
     Label.font =[UIFont systemFontOfSize:15];
     [_backView addSubview:Label];
@@ -268,19 +273,19 @@
 #pragma mark implement BMKSearchDelegate
 - (void)onGetPoiResult:(BMKPoiSearch *)searcher result:(BMKPoiResult*)result errorCode:(BMKSearchErrorCode)error
 {
-    NSLog(@"正在加载搜索数据");
+//    NSLog(@"正在加载搜索数据");
     // 清楚屏幕中所有的annotation
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
     [_sourceArr removeAllObjects];
     NSLog(@"请求结果：%d",error);
     if (error == BMK_SEARCH_NO_ERROR) {
-        NSLog(@"请求数据成功");
+//        NSLog(@"请求数据成功");
         NSMutableArray *annotations = [NSMutableArray array];
         for (int i = 0; i < result.poiInfoList.count; i++) {
             BMKPoiInfo* poi = [result.poiInfoList objectAtIndex:i];
             [_sourceArr addObject:poi];
-            NSLog(@"%@=%@",poi.name,poi.address);
+//            NSLog(@"%@=%@",poi.name,poi.address);
             BMKPointAnnotation* item = [[BMKPointAnnotation alloc]init];
             item.coordinate = poi.pt;
             item.title = poi.name;
@@ -296,7 +301,6 @@
         }else{
             NSLog(@"搜索出来的数据:%@",_sourceArr);
             [_tableview reloadData];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"first" object:_sourceArr];
         }
         
         [_mapView addAnnotations:annotations];
@@ -323,7 +327,7 @@
 - (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
 {
     [_mapView updateLocationData:userLocation];
-    NSLog(@"heading is %@",userLocation.heading);
+//    NSLog(@"heading is %@",userLocation.heading);
 }
 
 /**
@@ -332,14 +336,14 @@
  */
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
 {
-    NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
+//    NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
     _longlation =userLocation.location.coordinate.longitude;
     _latilation =userLocation.location.coordinate.latitude;
     [_mapView updateLocationData:userLocation];
 
     
         if (_longlation >0) {
-            NSLog(@"有地理位置了");
+//            NSLog(@"有地理位置了");
             NSLog(@"=%@=",[[NSUserDefaults standardUserDefaults] objectForKey:@"longLation"]);
            if (![[NSUserDefaults standardUserDefaults] objectForKey:@"longLation"]) {
                NSLog(@"第一次进来页面");
@@ -367,6 +371,7 @@
     _poisearch.delegate = nil; // 不用时，置nil
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"longLation"];
     [_backView removeFromSuperview];
+    _backView = nil;
 
     
 }
@@ -434,7 +439,6 @@
 
 // 当子控制器完全展示在user面前时发送通知
 - (void)postFullyDisplayedNotificationWithCurrentIndex:(int)index {
-    NSLog(@"++++%d+++",index);
     _aaa =index;
     if (index ==0) {
     [self button:@"写字楼"];
