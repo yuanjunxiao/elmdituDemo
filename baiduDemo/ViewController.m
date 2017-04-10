@@ -23,7 +23,7 @@
 
 @property (nonatomic ,strong)NSMutableArray *sourceArr;
 @property(nonatomic ,strong) UITableView     *tableview;
-
+@property (nonatomic,strong)BMKPoiInfo* poi;
 
 @end
 
@@ -40,8 +40,7 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 -(void)backaction:(NSNotification *)noti{
-    BMKPoiInfo* poi = [noti object];
-    NSLog(@"==%@==",poi.address);
+    _poi = [noti object];
     [_tableview reloadData];
   
 }
@@ -72,6 +71,13 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     myTableViewCell *cell              = [tableView dequeueReusableCellWithIdentifier:@"myTableViewCell" forIndexPath:indexPath];
+    if (_poi.name) {
+        if (indexPath.row == 1) {
+            cell.textLabel.text = [NSString stringWithFormat:@"%@",_poi.city];
+        }else if (indexPath.row == 2){
+          cell.textLabel.text = [NSString stringWithFormat:@"%@",_poi.address];
+        }
+    }
     return cell;
 }
 //选中事件 有反应
