@@ -1,0 +1,17 @@
+//
+//  AppDelegate.h
+//  baiduDemo
+//
+//  Created by 袁俊晓 on 2017/4/5.
+//  Copyright © 2017年 yuanjunxiao. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <BaiduMapAPI_Base/BMKBaseComponent.h>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,BMKGeneralDelegate>
+
+@property (strong, nonatomic) UIWindow *window;
+
+
+@end
+
