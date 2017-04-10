@@ -76,7 +76,7 @@
     myTableViewCell *cell              = [tableView dequeueReusableCellWithIdentifier:@"myTableViewCell" forIndexPath:indexPath];
     if (_poi.name) {
         if (indexPath.row == 1) {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@",_poi.city];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ %@",_poi.city,_poi.name];
         }else if (indexPath.row == 2){
             cell.textLabel.text = [NSString stringWithFormat:@"%@",_poi.address];
         }

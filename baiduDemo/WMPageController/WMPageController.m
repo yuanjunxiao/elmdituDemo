@@ -27,7 +27,6 @@
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 #import <BaiduMapAPI_Search/BMKSearchComponent.h>
 #import "myTableViewCell.h"
-
 #import "firstViewController.h"
 #import "secondViewController.h"
 #import "threeViewController.h"
@@ -236,7 +235,6 @@
     BMKPoiInfo* poi = _sourceArr[indexPath.row];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"backSource" object:poi];
     [self.navigationController popViewControllerAnimated:YES];
-
     
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -368,7 +366,7 @@
     _geocodesearch.delegate = nil; // 不用时，置nil
     _poisearch.delegate = nil; // 不用时，置nil
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"longLation"];
-    NSLog(@"退出时打印=%@=",[[NSUserDefaults standardUserDefaults] objectForKey:@"longLation"]);
+    [_backView removeFromSuperview];
 
     
 }
